@@ -1,9 +1,16 @@
-import express from "express";
-import routes from "./routes.js";
+import { app } from "./server.js";
+import { DatabaseModel } from "./model/DataBaseModel.js";
 
-const app = express();
+const port = 3333;
 
-app.use(express.json());
-app.use(routes);
-
-export default app;
+(async () => {
+    const dbModel = new DatabaseModel();
+    const ok = await dbModel.testeConexao();
+    if (!ok) {
+        console.log("❌ Não foi possível conectar ao banco de dados");
+        process.exit(1);
+    }
+    app.listen(port, () => {
+        console.log(`🚀 Servidor rodando em http://localhost:${port}`);
+    });
+})();

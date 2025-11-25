@@ -1,35 +1,17 @@
-import { Router } from 'express';
-import type { Request, Response } from 'express';
-import Aluno from './model/Aluno.js'; // extensão .js obrigatória
+import { Router } from "express";
+import type { Request, Response } from "express";
+import LivroController from "./controller/LivrosController.js";
 
-const routes = Router();
+const router: Router = Router();
 
-let alunos: Aluno[] = [];
-
-routes.get('/', (req: Request, res: Response) => {
-  res.send('API Biblioteca funcionando!');
+router.get("/api", (req: Request, res: Response) => {
+    res.status(200).json({ mensagem: "Olá, seja bem-vindo a Biblioteca!" });
 });
 
-routes.post('/alunos', (req: Request, res: Response) => {
-  const { ra, nome, sobrenome, dataNascimento, endereco, email, celular } = req.body;
+// LIVROS
+router.get("/api/livros", LivroController.todos);
+router.post("/api/livros", LivroController.novo);
+router.get("/api/livros/:id", LivroController.livro);
 
-  const novoAluno = new Aluno(
-    ra,
-    nome,
-    sobrenome,
-    new Date(dataNascimento),
-    endereco,
-    email,
-    celular
-  );
 
-  alunos.push(novoAluno);
-  return res.status(201).json({ message: 'Aluno cadastrado com sucesso!', aluno: novoAluno });
-});
-
-routes.get('/alunos', (req: Request, res: Response) => {
-  return res.json(alunos);
-});
-
-export default routes;
-
+export default router;
